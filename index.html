@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encontra Tudo</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 13l4 4L19 7" stroke="#04140d" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div>
+    <h1>Encontra Tudo</h1>
+    <p class="tagline">Digite os materiais que você precisa e marque conforme for encontrando</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===================== COMPROMISSOS ===================== -->
+  <section class="add-panel">
+    <div class="panel-head">
+      <h2>Compromissos</h2>
+      <button type="button" class="btn btn-notify" id="btnNotify">🔔 Ativar notificações</button>
+    </div>
+    <form class="add-form" id="eventForm">
+      <div class="add-form-row">
+        <input type="text" id="eventTitle" placeholder="Ex: Prova de matemática, reunião..." autocomplete="off" required>
+        <input type="datetime-local" id="eventDate" required>
+        <select id="eventAviso" title="Avisar com antecedência">
+          {% for m in avisos %}
+          <option value="{{ m }}" {{ 'selected' if m == 10 }}>
+            {% if m == 0 %}Na hora{% elif m < 60 %}{{ m }} min antes{% elif m < 1440 %}{{ m // 60 }} h antes{% else %}1 dia antes{% endif %}
+          </option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn-add">+ Agendar</button>
+      </div>
+    </form>
+    <ul class="event-list" id="eventList"></ul>
+  </section>
+
+  <!-- ===================== ADICIONAR MATERIAL ===================== -->
+  <section class="add-panel">
+    <h2>Adicionar material</h2>
+    <form class="add-form" id="addForm">
+      <div class="add-form-row">
+        <input type="text" id="materialInput" placeholder="Ex: Madeira, Diamante, Parafuso..." autocomplete="off">
+        <select id="categorySelect">
+          {% for categoria in categorias %}
+          <option value="{{ categoria }}">{{ categoria }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn-add">+ Adicionar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ===================== PAINEL DE PROGRESSO ===================== -->
+  <section class="progress-panel">
+    <div class="progress-top">
+      <span class="progress-count" id="counterText">0 de 0 materiais encontrados</span>
+      <span class="progress-percent" id="percentText">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTROLES ===================== -->
+  <div class="controls">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+        <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Pesquisar na sua lista..." autocomplete="off">
+    </div>
+    <div class="category-row" id="categoryRow"></div>
+  </div>
+
+  <div class="action-row">
+    <button class="btn btn-mark" id="btnMarkAll">Marcar todos</button>
+    <button class="btn btn-unmark" id="btnUnmarkAll">Desmarcar todos</button>
+    <button class="btn btn-reset" id="btnReset">Resetar lista</button>
+  </div>
+
+  <!-- ===================== GRADE DE MATERIAIS ===================== -->
+  <div class="material-grid" id="materialGrid"></div>
+
+</main>
+
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script src="{{ url_for('static', filename='compromissos.js') }}"></script>
+
+</body>
+</html>
